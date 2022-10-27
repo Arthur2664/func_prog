@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LAB 1</title>
+    <style>
+        body {
+            margin: 2rem 4rem 5rem 3rem;
+            background-color: ghostwhite;
+            text-align:center; 
+        }
+        img {
+            width: 400;
+            height: 150px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .top-content > h2, h1{
+            margin-block-start: 0.4em;
+            margin-block-end: 0em;
+        }
+        p, a 
+        {
+            text-align: justify;
+            font-size: 20px;
+        }
+        code {
+            text-align: left;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .row {
+            display: flex;
+        }
+
+        .column > p{
+            flex: 33.33%;
+            padding: 5px;
+            text-align: center;
+            font-size: 17px;
+            margin-block-start: 0.2em;
+            margin-block-end: 0em;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="top-content">
+    <h1>Лабораторна робота 1</h1>
+    <h2>Студента групи ІПЗ-44</h2>
+    <h2>Якимчука Артура</h2>
+    <h2>Bаріант №11</h2>
+    </div>
+    <h2 style="margin-block-start: 2em;">Тема: Використання рекурсії для організації повторювальних процесів</h2>
+    <h2>Мета</h2>
+    <p class="parag">
+        Сформувати декларативне мислення в галузі програмування завдяки використанню чистих функцій,
+        рекурсій замість циклів, запобіганню даних, що змінюються.
+        Опанувати застосування рекурсивних функцій для обчислювальних процесів.
+    </p>
+</header>
+<main>
+    <div>
+        <h2>Вибір середовища</h2>
+        <p class="parag">
+            Racket — це універсальна багатопарадигмальна мова програмування та мультиплатформенний дистрибутив, який включає мову Racket, 
+            компілятор, велику стандартну бібліотеку, IDE, засоби розробки та набір додаткових мов. Мова Racket є сучасним діалектом Lisp 
+            і нащадком Scheme. Він створений як платформа для проектування та впровадження мови програмування. На додаток до основної мови 
+            Racket, Racket також використовується для позначення сімейства мов програмування та набору інструментів, що підтримують розробку 
+            на Racket і з ним. Racket також використовується для створення сценаріїв, навчання інформатиці та досліджень. Racket призначений 
+            для розробки програм та мов програмування. Це означає, що з його допомогою можна досліджувати не лише те, <i>як</i> писати програми, 
+            а й <i>чому</i> саме так.
+        </p>
+        <h2>Задача 1</h2>
+        <p class="parag">
+            Послідовність 1, 1, 2, 3, 5, 8, ... складається з чисел Фібоначчі. 
+            Кожен елемент, починаючи з третього, дорівнює сумі двох попередніх. 
+            Рекурентне співвідношення для розрахунку чисел Фібоначчі таке:
+        </p>
+        <img src="task_formula.png" alt="Task formula"/>
+        <p class="parag">Ввести з клавіатури два натуральних числа   m   та   n, які означають кількість чисел та номер числа 
+            в послідовності Фібоначчі. Вивести послідовність чисел Фібоначчі в кількості   m   елементів та значення
+            n-го числа. Передбачити випадок   m   <   n. Визначити глибину рекурсії.</p>
+        <h2>Код програми</h2>
+        <pre>
+            <code>
+                #lang racket
+
+                (define (fibonacci m n)
+                (if (< m n)(error "\nn is out of range")
+                    (fib m n 1 0 0)))
+
+                (define (fib m n j k d)
+                (display j)
+                (cond
+                    ((= m 1) (display "\nthe depth is ") (display d)
+                            (display "\nthe n-th value is ") (display n))
+                    
+                    (else (cond ((= n (+ d 1)) (set! n j)))
+                        (fib (- m 1) n (+ j k) j (+ d 1)))))
+
+                (define m (string->number(read-line (current-input-port) 'any)))
+                (define n (string->number(read-line (current-input-port) 'any)))
+
+                (fibonacci m n)
+            </code>
+        </pre>
+        <h2>Результати роботи програми</h2>
+        <div class="row">
+            <div class="column">
+                <img src="first_task_result_1.png" alt="Task 1 result" style="margin-right: 30px;">
+                <p>Скрін-шот результату</p>
+            </div>
+            <div class="column">
+                <img src="first_task_result_2.png" alt="Task 1 result">
+                <p>Скрін-шот результату</p>
+            </div>
+        </div>        
+        <p class="parag">При заданих вхідних 5 (кількість елементів) і 3 (значення під цим індексом будемо виводити далі)
+            отримані результати: числа Фібоначчі: 1 1 2 3 5, глибина рекурсії - 4 та 
+            елемент під номером 3 - 2. Перевірка через калькулятор показала, що ця відповідь
+            є коректною. 
+        </p>
+        <a href="https://github.com/Arthur2664/func_prog/blob/main/lab1/lab1_task1.rkt"><h2>source file link</h2></a>
+    </div>
+    <div>
+        <h2>Задача 2</h2>
+        <p class="parag">
+            Створити рекурсивну функцію, яка отримує числа, зчитуючи їх з клавіатури, і перевіряє їх на непарність. 
+            Кінець вводу - число 0. Функція не повертає значення, а відразу ж виводить результат на екран, зберігаючи 
+            порядок ведених чисел. У цьому завданні   не можна   використовувати глобальні змінні і передавати будь-які 
+            аргументи в рекурсивну функцію. Основна програма повинна складатися тільки з виклику цієї функції. Контрольний 
+            тест: введені числа 3 2 1 0, отриманий результат: 3 1.
+        </p>
+        <h2>Код програми</h2>
+        <pre>
+            <code>
+                #lang racket
+
+                (define (nums)
+                    (define n (string->number(read-line (current-input-port) 'any)))
+                    (cond
+                    ((= n 0) n)
+                    (else (cond ((even? (nums)) (display n)))
+                        n)
+                    ))
+                    
+                (nums)
+            </code>
+        </pre>
+        <h2>Результати роботи програми</h2>
+        <img src="second_task_result_1.png" alt="Task 2 result">
+        <p>При заданій послідовності чисел виводяться всі непарні числа.</p>
+    </div>
+    <div>
+        <a href="https://github.com/Arthur2664/func_prog/blob/main/lab1/lab1_task2.rkt"><h2>source file link</h2></a>
+        <h2>Висновок</h2>
+        <p class="parag">
+            Після проведеної роботи було реалізовано дві програми з використанням рекурсій.
+            Перша програма, для розрахунку чисел Фібоначчі, виявилася легшою. Найбільшою складністю
+            було розібратись з новим та незнайомим синтаксисом нової для мене мови програмування.
+            Найбільшою складністю було дійти до найпростішого рішення другої програми.
+        </p>
+    </section>
+</main>
+</body>
+</html>

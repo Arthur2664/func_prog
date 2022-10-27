@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LAB 2</title>
+    <style>
+        body {
+            margin: 2rem 4rem 5rem 3rem;
+            background-color: ghostwhite;
+            text-align:center; 
+        }
+        img {
+            width: 400;
+            height: 150px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .top-content > h2, h1{
+            margin-block-start: 0.4em;
+            margin-block-end: 0em;
+        }
+        p, a 
+        {
+            text-align: justify;
+            font-size: 20px;
+        }
+        code {
+            text-align: left;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .row {
+            display: flex;
+        }
+
+        .column > p{
+            flex: 33.33%;
+            padding: 5px;
+            text-align: center;
+            font-size: 17px;
+            margin-block-start: 0.2em;
+            margin-block-end: 0em;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="top-content">
+    <h1>Лабораторна робота 2</h1>
+    <h2>Студента групи ІПЗ-44</h2>
+    <h2>Якимчука Артура</h2>
+    <h2>Bаріант №11</h2>
+    </div>
+    <h2 style="margin-block-start: 2em;">Тема: Рекурентні співвідношення для тригонометричних, експоненціальних функцій та ланцюгові дроби</h2>
+    <h2>Мета</h2>
+    <p class="parag">
+        Опанувати теоретичні основи застосування рекурентних співвідношень для обчислення 
+        тригонометричних, експоненціальних, степеневих функцій та розробити програми 
+        функціональними мовам програмування для обчислення їх значень 
+    </p>
+</header>
+<main>
+    <div>
+        <h2>Вибір середовища</h2>
+        <p class="parag">
+            Racket — це універсальна багатопарадигмальна мова програмування та мультиплатформенний дистрибутив, який включає мову Racket, 
+            компілятор, велику стандартну бібліотеку, IDE, засоби розробки та набір додаткових мов. Мова Racket є сучасним діалектом Lisp 
+            і нащадком Scheme. Він створений як платформа для проектування та впровадження мови програмування. На додаток до основної мови 
+            Racket, Racket також використовується для позначення сімейства мов програмування та набору інструментів, що підтримують розробку 
+            на Racket і з ним. Racket також використовується для створення сценаріїв, навчання інформатиці та досліджень. Racket призначений 
+            для розробки програм та мов програмування. Це означає, що з його допомогою можна досліджувати не лише те, <i>як</i> писати програми, 
+            а й <i>чому</i> саме так.
+        </p>
+        <h2>Задача 1</h2>
+        <p class="parag">
+            Обчислити значення функції у, розвинувши функцію cos(x) у ряд Тейлора. 
+            Аргумент х змінюється від -2 до 3 з кроком 0.5. Визначити похибку
+        </p>
+        <img src="task_formula_lab2.png" alt="Task formula"/>
+        <h2>Код програми</h2>
+        <pre>
+            <code>
+                #lang racket
+                (define (factorial n)
+                (if (= n 0)
+                    1
+                    (* n (factorial (- n 1)))))
+
+                (define (coss x . n)
+                (cond ((not (null? n))
+                        (cond ((< 25 (car n))
+                                0)
+                            (else (- (/ (expt x (car n)) (factorial (car n)))
+                                        (coss x (+ 2 (car n)))))))
+                        (else (- x (coss x 2)))))
+                        
+                (abs (- (coss 0.5 0) (cos 0.5)))
+                
+                (define (counting x)
+                (cond
+                    [(and (<= -2 x) (<= x 1))
+                    (display "for x = ") + (display x) + (display "   y = ")+
+                    (display(* (sqr (coss x)) (coss (sqr x)))) +
+                    (display"\n") +
+                    (counting (+ x 0.5))]
+                    
+                    [(and (< 1 x) (<= x 3))
+                    (display "for x = ") + (display x) + (display "   y = ")+
+                    (display(/ (coss (/ x 2)) (coss (+ x 0.5)))) +
+                    (display"\n") +
+                    (counting (+ x 0.5))]
+                ))
+
+                (counting -2)
+            </code>
+        </pre>
+        <h2>Результати роботи програми</h2>
+                <img src="first_task_result_lab2.png" alt="Task 1 result" style="height: 250px;">      
+        <p class="parag">При виконанні програми в першому рядку відображується абсолютна похибка між вбудованою в мову функцію для розрахунку cos
+            та між написаною власноруч функцією котра розвинена у ряд Тейлора. В наступних рядках відображуються значення у при конкретних значеннях х.
+        </p>
+        <a href="https://github.com/Arthur2664/func_prog/blob/main/lab2/lab2_task1.rkt"><h2>source file link</h2></a>
+    </div>
+    <div>
+        <h2>Задача 2</h2>
+        <p class="parag">
+            Ввести з клавіатури натуральне число <i> n </i>. Необхідно отримати всі досконалі числа, менші за <i>n</i>. 
+            Досконалим називається число, значення якого дорівнює сумі всіх його дільників.
+        </p>
+        <h2>Код програми</h2>
+        <pre>
+            <code>
+                #lang racket
+                (define (proper-factors-of m)
+                (filter
+                    (lambda (x) (= 0 (modulo m x)))
+
+                    (sequence->list (in-range 1 m))))
+
+                (define (is-perfect? m)
+                (and
+                    (> (length (proper-factors-of m)) 1)
+
+                    (= (apply + (proper-factors-of m)) m)))
+
+                (define n (string->number(read-line (current-input-port) 'any)))
+                (display 
+                (filter is-perfect? 
+                    (sequence->list (in-range n))))
+            </code>
+        </pre>
+        <h2>Результати роботи програми</h2>
+        <img src="second_task_result_lab2.png" alt="Task 2 result">
+        <p>При заданому з клавіатури числі виводяться списком всі досконалі числа, які менше за <i>n</i>>.</p>
+    </div>
+    <div>
+        <a href="https://github.com/Arthur2664/func_prog/blob/main/lab2/lab2_task2.rkt"><h2>source file link</h2></a>
+        <h2>Висновок</h2>
+        <p class="parag">
+            Після проведеної роботи було реалізовано дві програми з використанням рекурентних співвідношень.
+            Друга програма для виведення досконалих чисел виявилася легшою, ніж перша.
+            В першій задачі найбільшою складністю виявилося правильне написання умови cond.
+            Сама лабораторна виявилася досить цікавою та пізнавальною.
+        </p>
+    </section>
+</main>
+</body>
+</html>

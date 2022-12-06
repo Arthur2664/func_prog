@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LAB 8</title>
+    <style>
+        body {
+            margin: 2rem 4rem 5rem 3rem;
+            background-color: ghostwhite;
+            text-align:center; 
+        }
+        img {
+            width: 400;
+            height: 150px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .top-content > h2, h1{
+            margin-block-start: 0.4em;
+            margin-block-end: 0em;
+        }
+        p, a 
+        {
+            text-align: justify;
+            font-size: 20px;
+        }
+        code {
+            text-align: left;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .row {
+            display: flex;
+        }
+
+        .column > p{
+            flex: 33.33%;
+            padding: 5px;
+            text-align: center;
+            font-size: 17px;
+            margin-block-start: 0.2em;
+            margin-block-end: 0em;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="top-content">
+    <h1>Лабораторна робота 8</h1>
+    <h2>Студента групи ІПЗ-44</h2>
+    <h2>Якимчука Артура</h2>
+    <h2>Bаріант №11</h2>
+    </div>
+    <h2 style="margin-block-start: 2em;">Тема: Символьні обчислення мовами функціонального програмування. Операції з многочленами.</h2>
+    <h2>Мета</h2>
+    <p class="parag">
+        Опанувати теоретичні основи символьних обчислень мовами функціонального 
+        програмування. Розробити програми символьного диференціювання та реалізації 
+        арифметики поліномів 
+    </p>
+</header>
+<main>
+    <div>
+        <h2>Вибір середовища</h2>
+        <p class="parag">
+            Racket — це універсальна багатопарадигмальна мова програмування та мультиплатформенний дистрибутив, який включає мову Racket, 
+            компілятор, велику стандартну бібліотеку, IDE, засоби розробки та набір додаткових мов. Мова Racket є сучасним діалектом Lisp 
+            і нащадком Scheme. Він створений як платформа для проектування та впровадження мови програмування. На додаток до основної мови 
+            Racket, Racket також використовується для позначення сімейства мов програмування та набору інструментів, що підтримують розробку 
+            на Racket і з ним. Racket також використовується для створення сценаріїв, навчання інформатиці та досліджень. Racket призначений 
+            для розробки програм та мов програмування. Це означає, що з його допомогою можна досліджувати не лише те, <i>як</i> писати програми, 
+            а й <i>чому</i> саме так.
+        </p>
+        <h2>Задача</h2>
+        <p class="parag">
+            Написати програму символьного диференціювання по одній змінній поліному, 
+            який заданий списком своїх коефіцієнтів та степенем у вигляді:    
+            <i>f(x) = a<sub>0</sub>x<sup>n</sup> + a<sub>1</sub>x<sup>n-1</sup> +...+ a<sub>n-1</sub>x + a<sub>n</sub></i>. 
+            Знайти першу, другу та третю похідні. Результати вивести у вигляді 
+            символьного виразу. Значення поліному та його похідних при заданому 
+            користувачем значенні змінної не обчислювати.
+        </p>
+        <h2>Код програми</h2>
+        <pre>
+            <code>
+                #lang racket
+
+                (define (deriv pol)
+                (if (not (null? (cdr pol)))
+                    (append (list (* (car pol)
+                                    (- (length pol) 1)))
+                            (deriv (cdr pol)))'()))
+
+                (define (print-pol pol)
+                (when (not (null? pol))
+                    (when (not (= (car pol) 0))
+                    (begin (display "(") (display (car pol)) (display "*x^")
+                            (display (- (length pol) 1)) (display ")")
+                            (if (not (null? (cdr pol)))
+                                (begin (display (if (not (= (cadr pol) 0))" + " ""))
+                                        (print-pol (cdr pol))) (newline))))))
+
+                (define polynomial (list -3 5 1 -7 -2 4))
+                (define d1 (deriv polynomial))
+                (define d2 (deriv d1))
+                (define d3 (deriv d2))
+                (display "Original equation:\n")
+                (print-pol polynomial)
+                (display "First derivative:\n")
+                (print-pol d1)
+                (display "Second derivative\n")
+                (print-pol d2)
+                (display "Third derivative\n")
+                (print-pol d3)
+            </code>
+        </pre>
+        <h2>Результати роботи програми</h2>
+        <img src="task_result_lab8.png" alt="Task 1 result" style="height: 250px;">      
+        <a href="https://github.com/Arthur2664/func_prog/blob/main/lab8/lab8.rkt"><h2>source file link</h2></a>
+    </div>
+        <h2>Висновок</h2>
+        <p class="parag">
+            Після проведеної роботи було реалізовано програму, яка вираховує похідні функції.
+        </p>
+    </section>
+</main>
+</body>
+</html>

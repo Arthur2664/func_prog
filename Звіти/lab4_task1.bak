@@ -1,0 +1,29 @@
+#lang racket
+(define (perf n)
+  (let loop ((i 1)
+             (sum 0))
+    (cond ((= i n)
+           (= sum n))
+          ((= 0 (modulo n i))
+           (loop (+ i 1) (+ sum i)))
+          (else
+           (loop (+ i 1) sum)))))
+
+
+(define (makelist n)
+  (map (cond
+         [(perf n) n])
+       (range n)))
+
+;(makelist 8)
+(define (makelistsq n)
+  (define perflist '())
+  (for ((i n))
+    (cond
+         [(perf i) (set! perflist (append perflist i))])
+    
+    )
+  perflist
+  )
+
+(makelistsq 100)

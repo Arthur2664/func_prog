@@ -19,7 +19,7 @@
                 (cond
                     [(and (<= -2 x) (<= x 1))
                     (display "for x = ") + (display x) + (display "   y = ")+
-                    (display (* (sqr (coss x)) (coss (sqr x)))) +
+                    (display(* (sqr (coss x)) (coss (sqr x)))) +
                     (display"\n") +
                     (counting (+ x 0.5))]
                     

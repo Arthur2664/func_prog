@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LAB 3</title>
+    <style>
+        body {
+            margin: 2rem 4rem 5rem 3rem;
+            background-color: ghostwhite;
+            text-align:center; 
+        }
+        img {
+            width: 400;
+            height: 150px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .top-content > h2, h1{
+            margin-block-start: 0.4em;
+            margin-block-end: 0em;
+        }
+        p, a 
+        {
+            text-align: justify;
+            font-size: 20px;
+        }
+        code {
+            text-align: left;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .row {
+            display: flex;
+        }
+
+        .column > p{
+            flex: 33.33%;
+            padding: 5px;
+            text-align: center;
+            font-size: 17px;
+            margin-block-start: 0.2em;
+            margin-block-end: 0em;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="top-content">
+    <h1>Лабораторна робота 3</h1>
+    <h2>Студента групи ІПЗ-44</h2>
+    <h2>Якимчука Артура</h2>
+    <h2>Bаріант №11</h2>
+    </div>
+    <h2 style="margin-block-start: 2em;">Тема: Форми lambda та let, вираз присвоєння set! для розв’язання нелінійних рівнянь та чисельного інтегрування функцій</h2>
+    <h2>Мета</h2>
+    <p class="parag">
+        Розв’язати нелінійні рівняння та здійснити чисельне інтегрування функцій 
+        наближеними методами, використовуючи мови функціонального програмування 
+        та lambda, let та set! форми.
+    </p>
+</header>
+<main>
+    <div>
+        <h2>Вибір середовища</h2>
+        <p class="parag">
+            Racket — це універсальна багатопарадигмальна мова програмування та мультиплатформенний дистрибутив, який включає мову Racket, 
+            компілятор, велику стандартну бібліотеку, IDE, засоби розробки та набір додаткових мов. Мова Racket є сучасним діалектом Lisp 
+            і нащадком Scheme. Він створений як платформа для проектування та впровадження мови програмування. На додаток до основної мови 
+            Racket, Racket також використовується для позначення сімейства мов програмування та набору інструментів, що підтримують розробку 
+            на Racket і з ним. Racket також використовується для створення сценаріїв, навчання інформатиці та досліджень. Racket призначений 
+            для розробки програм та мов програмування. Це означає, що з його допомогою можна досліджувати не лише те, <i>як</i> писати програми, 
+            а й <i>чому</i> саме так.
+        </p>
+        <h2>Задача 1</h2>
+        <p class="parag">
+            Знайти корені нелінійного рівняння виду  <i>x</i><sup>2</sup> - cos <i>x</i> = 0. 
+            Пошук наближеного значення хоча б одного кореня рівняння <i>f(x)</i> = 0 
+            на відрізку [<i>a; b</i>] здійснювати методами простої ітерації та перебором. 
+            Значення <i>a, b</i> інтервалу вибрати самостійно. Порівняти результати розв’язків двома методами.
+        </p>
+        <h2>Код програми</h2>
+        <pre>
+            <code>
+                #lang racket
+                <u>;half interval method</u>
+                (define (search f neg-point pos-point)
+                (let ((midpoint (average neg-point pos-point)))
+                    (if (close-enough? neg-point pos-point)
+                        midpoint
+                        (let ((test-value (f midpoint)))
+                        (cond ((positive? test-value)
+                                (search f neg-point midpoint))
+                                ((negative? test-value)
+                                (search f midpoint pos-point))
+                                (else midpoint))))))
+
+                (define (average x y)
+                (/ (+ x y) 2))
+                (define (close-enough? x y)
+                (< (abs (- x y)) 0.001))
+
+                (define (half-interval-method f a b)
+                (let ((a-value (f a))
+                        (b-value (f b)))
+                    (cond ((< a-value b-value)
+                        (search f a b))
+                        ((> a-value b-value)
+                        (search f b a))
+                        (else (error "Can't use the same values:" a b)))))
+
+                (display "half interval method: ")
+                (half-interval-method 
+                (lambda (x) (- (* x x) (cos x))) 0.0 2.5)
+
+
+                <u>;brute force method</u>
+                (define (brute_force a b interval)
+                (for ([ x (in-range a b interval)])
+                    (cond
+                    [(close-enough? (- (* x x) (cos x)) 0.0)
+                        (display x)
+                        (display "\n")])))
+                
+                (display "brute force method: ")
+                (brute_force 0.0 2.5 0.001)
+            </code>
+        </pre>
+        <h2>Результати роботи програми</h2>
+                <img src="first_task_result_lab3.png" alt="Task 1 result">      
+        <p class="parag">
+            При виконанні програми рівняння обчислюється двома методами: методом бісекції та простим перебором.
+            Чим меньше стоїть крок при виклику функції <i>brute_force</i> та чим менше число для перевірки точності в функції 
+            <i>close-enough?</i>, тим точніше отримуємо відподвіль при переборі. Але треба обов'язково паралельно змінювати ці два числа
+            і, звісно, така точність впливає на швидкість виконання програми.
+        </p>
+        <a href="https://github.com/Arthur2664/func_prog/blob/main/lab3/lab3_task1.rkt"><h2>source file link</h2></a>
+    </div>
+    <div>
+        <h2>Задача 2</h2>
+        <p class="parag">
+            Написати процедури для обчислити інтеграла за формулами трапецій і Сімпсона. Порівняти результати обчислення. 
+        </p>
+        <img src="task_formula_lab3.png" alt="Task formula"/>
+        <h2>Код програми</h2>
+        <pre>
+            <code>
+                #lang racket
+                (define (trapezoidal f a b n)
+                (let ((step (/ (- b a) n)))
+                    (* (/ step 2) (+ (tr_first_last f a b) (tr_doubled f (+ a step) b step))
+                )))
+
+                (define (tr_first_last f a b)
+                (+ (f a) (f b)))
+                (define (tr_doubled f a b step)
+                (if (>= a b)
+                    0
+                    (+ (* 2 (f a)) (tr_doubled f (+ a step) b step))))
+
+                (display "trapezoidal method: ")
+                (trapezoidal
+                (lambda (x) (/ (cos x) (sqrt x))) 0.1 2 4)
+
+
+                (define (simpsons f a b n)
+                (cond ((odd? n)
+                        (error "N should be an even number:" n)))
+                (let ((step (/ (- b a) n)))
+                    (* (/ step 3)
+                    (+ (sm_first_last f a b) (sm_quadrupled f (+ a step) b step) (sm_doubled f (+ a (* 2 step)) b step))
+                    )))
+
+                (define (sm_first_last f a b)
+                (+ (f a) (f b)))
+                (define (sm_quadrupled f a b step)
+                (if (>= a b)
+                    0
+                    (+ (* 4 (f a)) (sm_quadrupled f (+ a (* 2 step)) b step))))
+                (define (sm_doubled f a b step)
+                (if (>= a b)
+                    0
+                    (+ (* 2 (f a)) (sm_doubled f (+ a (* 2 step)) b step))))
+
+                (display "Simpson's method: ")
+                (simpsons
+                (lambda (x) (/ (cos x) (sqrt x))) 0.1 2 4)
+            </code>
+        </pre>
+        <h2>Результати роботи програми</h2>
+        <img src="second_task_result_lab3.png" alt="Task 2 result">
+        <p>При виконанні програми інтеграл обчислюється двома методами: за формулами трапецій та Сімпсона.
+            Обидві ці формули досить схожі, тому після написання першої функції, другу функцію було досить легко написати.
+            Результати одного і того ж самого логарифму трохи відрізняються , бо методи мають різну точність.
+        </p>
+    </div>
+    <div>
+        <a href="https://github.com/Arthur2664/func_prog/blob/main/lab3/lab3_task2.rkt"><h2>source file link</h2></a>
+        <h2>Висновок</h2>
+        <p class="parag">
+            Після проведеної роботи було реалізовано дві програми для обчислень з використанням <i>lambda</i> та <i>let</i> форм.
+            Друга програма для обчислення логарифму виявилася трохи легшою ніж перша, оскільки було 
+            досить легко зрозуміти та написати самі формули для розрахунку.
+            Найбільшою складністю в цій лабораторній було розібратися з синтаксисом форм <i>let</i> та <i>lambda</i>.
+        </p>
+    </section>
+</main>
+</body>
+</html>
